@@ -1,0 +1,45 @@
+import discord
+from discord.ext import commands
+
+TOKEN = ''
+
+client = commands.Bot(command_prefix = '.')
+reactions = [":thumbsup:"]
+
+@client.event
+async def on_ready():
+  print('Bot is ready.')
+
+@client.command(pass_context=True)
+async def clear(ctx, amount=100):  
+  channel = ctx.message.channel
+  messages = []
+  async for message in client.logs_from(channel, limit=int(amount)):
+    messages.append(message)
+  await client.delete_messages(messages)
+
+@client.command(pass_context=True)
+async def displayembed(ctx):
+  channel = ctx.message.channel
+  embed = discord.Embed(
+    title = 'ZLeague Tournament',
+    description = 'Brightstar Gaming is participating in a tournament soon! Sign up here',
+    colour = discord.Colour.blue()
+  )
+
+  embed.set_footer(text='Hitting it from the back!')
+  embed.set_image(url='https://www.nme.com/wp-content/uploads/2021/12/Call-of-Duty-Warzone-chapter-3.jpg')
+  embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/950481247786901524/977354735449440366/ezgif.com-gif-maker3.gif')
+  embed.set_author(name='Brightstar Gaming',
+  icon_url='https://cdn.discordapp.com/attachments/950481247786901524/975516685199081562/BStarpng.png')
+  embed.add_field(name='Spot #1', value='Name goes here', inline=True)
+  embed.add_field(name='Spot #2', value='Name goes here', inline=True)
+  embed.add_field(name='Spot #3', value='Name goes here', inline=True)
+  embed.add_field(name='Spot #4', value='Name goes here', inline=True)
+
+  await channel.send(embed=embed)
+  message = await channel.send('React here!')
+  message_id = message.id
+  await message.add_reaction('👍')
+  
+client.run(TOKEN)
